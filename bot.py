@@ -134,7 +134,7 @@ def main():
     dp.add_handler(CommandHandler("unsubscribe", unsubscribe))
     
     # Обработчик кнопок
-    dp.add_handler(MessageHandler(filters.TEXT & ~Filters.command, button_handler))
+    dp.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, button_handler))
 
     updater.start_polling()
     logger.info("Бот запущен!")
