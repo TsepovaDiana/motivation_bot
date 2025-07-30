@@ -54,7 +54,7 @@ async def subscribe(update: Update, context: ContextTypes.DEFAULT_TYPE):
         daily_quote,
         time=datetime.time(hour=7, minute=30),
         chat_id=chat_id,
-        name=str(chat_id)
+        name=str(chat_id))
     await update.message.reply_text("✅ Вы подписаны на ежедневные цитаты в 7:30 утра!")
 
 async def unsubscribe(update: Update, context: ContextTypes.DEFAULT_TYPE):
