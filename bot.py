@@ -1,6 +1,7 @@
 import json
 import random
 import logging
+from dotenv import load_dotenv
 import os
 import datetime  # Добавлен отсутствующий импорт
 from telegram import Update
@@ -18,7 +19,7 @@ logging.basicConfig(
     level=logging.INFO
 )
 logger = logging.getLogger(__name__)
-
+load_dotenv()
 # Конфигурация
 TOKEN = os.getenv('TELEGRAM_TOKEN')
 if not TOKEN:
