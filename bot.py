@@ -9,9 +9,7 @@ from telegram import Update
 from telegram.ext import (
     Application,
     CommandHandler,
-    ContextTypes,
-    filters,
-    JobQueue
+    ContextTypes
 )
 
 # Настройка логирования
@@ -90,12 +88,19 @@ async def subscribe(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Подписка на ежедневные цитаты"""
     try:
         chat_id = update.message.chat_id
+        # Удаляем старые задания для этого чата
+        current_jobs = context.job_queue.get_jobs_by_name(str(chat_id))
+        for job in current_jobs:
+            job.schedule_removal()
+            
+        # Создаем новое задание
         context.job_queue.run_daily(
             daily_quote,
             time=datetime.time(hour=7, minute=30, tzinfo=pytz.timezone('Europe/Moscow')),
             chat_id=chat_id,
             name=str(chat_id)
-        await update.message.reply_text("✅ Вы подписаны на ежедневные цитаты в 7:30 утра!")
+        )
+        await update.message.reply_text("✅ Вы подписаны на ежедневные цитаты в 7:30 утра по Москве!")
     except Exception as e:
         logger.error(f"Ошибка при подписке: {e}")
         await update.message.reply_text("⚠️ Не удалось оформить подписку")
@@ -120,7 +125,7 @@ async def unsubscribe(update: Update, context: ContextTypes.DEFAULT_TYPE):
 def main():
     """Основная функция запуска бота"""
     try:
-        # Создаем Application с JobQueue
+        # Создаем Application
         application = Application.builder().token(TOKEN).build()
         
         # Регистрируем обработчики команд
